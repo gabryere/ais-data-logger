@@ -1,0 +1,14 @@
+{
+  "name": "ais-data-logger",
+  "version": "1.0.0",
+  "main": "logger.js",
+  "type": "module",
+  "scripts": {
+    "start": "node logger.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.1",
+    "ws": "^8.13.0",
+    "dotenv": "^16.3.1"
+  }
+}
