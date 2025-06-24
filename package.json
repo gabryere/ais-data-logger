@@ -2,7 +2,6 @@
   "name": "ais-data-logger",
   "version": "1.0.0",
   "main": "logger.js",
-  "type": "module",
   "scripts": {
     "start": "node logger.js"
   },
