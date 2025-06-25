@@ -1,0 +1,28 @@
+name: Aggiornamento dati AIS
+
+on:
+  schedule:
+    - cron: '*/12 * * * *' # ogni 12 minuti
+  workflow_dispatch: # esegui manualmente da GitHub se vuoi
+
+jobs:
+  run-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run update.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          AIS_API_KEY: ${{ secrets.AIS_API_KEY }}
+        run: node update.js
