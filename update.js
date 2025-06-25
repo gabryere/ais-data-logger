@@ -106,7 +106,7 @@ async function updateAll() {
     let data = null;
     let tentativi = 0;
 
-    while (!data && tentativi < 6) {
+    while (!data && tentativi < 10) {
       try {
         console.log(`Tentativo ${tentativi + 1} per ${ship.name}`);
         data = await fetchPosition(ship.mmsi);
@@ -116,7 +116,7 @@ async function updateAll() {
         }
       } catch (e) {
         console.warn(`Errore per ${ship.name}:`, e);
-        await sleep(6000);
+        await sleep(10000);
       }
       tentativi++;
     }
