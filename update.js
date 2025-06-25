@@ -74,7 +74,7 @@ async function fetchPosition(mmsi) {
 }
 
 async function updateSupabase(ship, data) {
-  await supabase.from('navi').upsert({
+  const result = await supabase.from('navi').upsert({
     nome: ship.name,
     compagnia: ship.company,
     mmsi: ship.mmsi,
@@ -83,21 +83,40 @@ async function updateSupabase(ship, data) {
     velocita: data.speed,
     aggiornato_il: new Date().toISOString()
   }, { onConflict: ['mmsi'] });
+
+  if (result.error) {
+    console.error(`Errore Supabase per ${ship.name}:`, result.error.message);
+  }
+}
+
+async function initializeShips() {
+  for (const ship of ships) {
+    await supabase.from('navi').upsert({
+      nome: ship.name,
+      compagnia: ship.company,
+      mmsi: ship.mmsi
+    }, { onConflict: ['mmsi'] });
+  }
 }
 
 async function updateAll() {
+  await initializeShips();
+
   for (const ship of ships) {
     let data = null;
     let tentativi = 0;
-    while (!data && tentativi < 10) {
+
+    while (!data && tentativi < 6) {
       try {
         console.log(`Tentativo ${tentativi + 1} per ${ship.name}`);
         data = await fetchPosition(ship.mmsi);
-        await updateSupabase(ship, data);
-        console.log(`Aggiornato ${ship.name}`);
+        if (data) {
+          await updateSupabase(ship, data);
+          console.log(`Aggiornato ${ship.name}`);
+        }
       } catch (e) {
         console.warn(`Errore per ${ship.name}:`, e);
-        await sleep(2000);
+        await sleep(6000);
       }
       tentativi++;
     }
