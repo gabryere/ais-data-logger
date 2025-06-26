@@ -39,7 +39,7 @@ async function fetchPosition(mmsi) {
     const timeout = setTimeout(() => {
       ws.terminate();
       reject('Timeout');
-    }, 10000);
+    }, 5000); // ridotto da 10s a 5s
 
     ws.on('open', () => {
       const msg = {
@@ -106,7 +106,7 @@ async function updateAll() {
     let data = null;
     let tentativi = 0;
 
-    while (!data && tentativi < 10) {
+    while (!data && tentativi < 4) { // da 10 → 4 tentativi
       try {
         console.log(`Tentativo ${tentativi + 1} per ${ship.name}`);
         data = await fetchPosition(ship.mmsi);
@@ -116,7 +116,7 @@ async function updateAll() {
         }
       } catch (e) {
         console.warn(`Errore per ${ship.name}:`, e);
-        await sleep(10000);
+        await sleep(4000); // pausa ridotta da 10s → 4s
       }
       tentativi++;
     }
