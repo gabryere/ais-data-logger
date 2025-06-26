@@ -2,7 +2,7 @@ name: Aggiorna dati AIS
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # ogni 15 minuti
+    - cron: '*/20 * * * *'  # ogni 20 minuti
   workflow_dispatch:       # consente avvio manuale
 
 jobs:
